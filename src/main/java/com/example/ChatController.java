@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 @Controller
 public class ChatController {
-    private ArrayList <String> users = new ArrayList<>();
-    private ArrayList <String> messages = new ArrayList<>();
+    private static ArrayList <String> users = new ArrayList<>();
+    private static ArrayList <String> messages = new ArrayList<>();
     private String user;
     Model model;
     String fullName;
