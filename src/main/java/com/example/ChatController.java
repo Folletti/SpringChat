@@ -18,20 +18,24 @@ public class ChatController {
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(name = "fullName", required = false, defaultValue = "user") String name, Model model) {
         model.addAttribute("fullName", name);
-        this.model = model;
-        this.fullName = name;
+        //this.model = model;
+        fullName = name;
+        users.add(name);
         return "greeting";
     }
 
-
     @RequestMapping("/chat")
     public String chatOpener(@RequestParam(name = "fullName", required = false, defaultValue = "user") String name, @RequestParam(name = "message", required = false, defaultValue = "----") String message, Model model) {
-        if (fullName.equals("user")) fullName = name;
+        if (fullName.equals("user"))
+        {
+            fullName = name;
+            users.remove("user");
+            users.add(name);
+        }
         model.addAttribute("fullName", fullName);
         model.addAttribute("message", message);
-        users.add(name);
         messages.add(message);
-        this.model = model;
+        //this.model = model;
         return "chat";
     }
 

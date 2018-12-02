@@ -9,7 +9,7 @@
 <p th:text="'Welcome to chat ' + ${fullName} + '!'"/>
 
 <div>
-    <p th:text="${message}"
+    <p th:text="${fullName} + ': ' + ${message}"
 </div>
 
 <form action="/chat" method="post">
