@@ -4,18 +4,82 @@
     <meta charset="UTF-8">
     <title>Chat</title>
     <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <style type="text/css">
+        .block1 {
+        width: 500px;
+        height: 400px;
+        backround: #ccc;
+        padding: 5px;
+        padding-right: 20px;
+        border: solid 1px black;
+        float: left;
+        position: relative;
+        left: 100px;
+        top: 100px;
+        }
+        .block2 {
+        width: 100px;
+        height: 100px;
+        backround: #ccc;
+        padding: 5px;
+        padding-right: 20px;
+        float: left;
+        position: relative;
+        left: -420px;
+        top: 550px;
+        }
+        .block3 {
+        width: 50px;
+        height: 50px;
+        backround: #ccc;
+        padding: 5px;
+        padding-right: 20px;
+        float: left;
+        position: relative;
+        left: -500px;
+        top: 650px;
+        }
+        .block4 {
+        width: 300px;
+        height: 600px;
+        backround: #ccc;
+        padding: 5px;
+        padding-right: 20px;
+        border: solid 1px black;
+        float: left;
+        position: relative;
+        left: 500px;
+        top: 100px;
+        }
+    </style>
 </head>
 <body>
-<p th:text="'Welcome to chat ' + ${fullName} + '!'"/>
 
-<div>
+<div align="center">
+    <h1><p th:text="'Добро пожаловать в чат, ' + ${fullName} + '!'"/></h1>
+</div>
+<div class="block1">
     <p th:utext="${messages}"></p>
 </div>
 
-<form action="/chat" method="post">
-    <input type="submit"/>
-    <input type="text" name="message">
-</form>
+<div class="block2">
+    <form action="/chat" method="post">
+        <input type="text" size="70" name="message">
+        <input type="submit" value="Отправить сообщение"/>
+    </form>
+</div>
+
+<div class="block3">
+    <form action="/refresh" method="post">
+        <input type="submit" value="Обновить"/>
+    </form>
+</div>
+
+<div class="block4">
+    <h2>Участники</h2>
+    <p th:utext="${users}"></p>
+</div>
+
 
 </body>
 </html>
