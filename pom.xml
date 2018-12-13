@@ -28,6 +28,16 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <version>2.1.1.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lucee</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>8.3-606.jdbc4</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -42,6 +52,11 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${project.basedir}\src\main\resources</directory>
+            </resource>
+        </resources>
     </build>
 
 </project>
