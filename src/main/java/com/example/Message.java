@@ -1,21 +1,23 @@
 package com.example;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 public class Message {
-    public Message(String message, LocalDateTime dateTime) {
+    public Message(User user, String message, Instant dateTime) {
         this.dateTime = dateTime;
         this.message = message;
+        this.user = user;
     }
-    private LocalDateTime dateTime;
+    private Instant dateTime;
     private String message;
+    private User user;
 
-    public LocalDateTime getDateTime() {
+    public Instant getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(Instant dateTime) {
         this.dateTime = dateTime;
     }
 
@@ -27,11 +29,20 @@ public class Message {
         this.message = message;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
                 "dateTime=" + dateTime +
                 ", message='" + message + '\'' +
+                ", user=" + user +
                 '}';
     }
 
@@ -41,11 +52,16 @@ public class Message {
         if (!(o instanceof Message)) return false;
         Message message1 = (Message) o;
         return Objects.equals(getDateTime(), message1.getDateTime()) &&
-                Objects.equals(getMessage(), message1.getMessage());
+                Objects.equals(getMessage(), message1.getMessage()) &&
+                Objects.equals(getUser(), message1.getUser());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDateTime(), getMessage());
+        return Objects.hash(getDateTime(), getMessage(), getUser());
+    }
+
+    public String getFormattedMessage() {
+        return dateTime.toString() + " | " + user.getFullName()+ ": " + message;
     }
 }
