@@ -1,5 +1,6 @@
 package com.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.postgresql.Driver;
 
 @Scope ("session")
 @Controller
@@ -17,6 +20,9 @@ public class ChatController {
     private String user;
     private User currentUser;
     private StringBuilder stringBuilder = new StringBuilder();
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(name = "fullName", required = false,
@@ -44,14 +50,22 @@ public class ChatController {
             });
         }
 
+        jdbcTemplate.execute("drop table chatdb if exists");
+        jdbcTemplate.execute("create table chatdb " +
+                "(id int," +
+                "fullName varchar(100)");
+        jdbcTemplate.batchUpdate("insert into chatdb values (1, Stupko M.)");
+
         messages.add(new Message(currentUser,  message, Instant.now()));
         stringBuilder.delete(0, stringBuilder.capacity());
 
-        messages.forEach((line) -> stringBuilder.append(line.getFormattedMessage() + "<br>"));
+        messages.forEach((line) -> stringBuilder.append(line
+                .getFormattedMessage() + "<br>"));
         model.addAttribute("messages", stringBuilder.toString() + "<br>");
         stringBuilder.delete(0, stringBuilder.capacity());
 
-        users.forEach((line) -> stringBuilder.append(line.getFullName() + "<br>"));
+        users.forEach((line) -> stringBuilder.append(line.getFullName()
+                + "<br>"));
         model.addAttribute("users", stringBuilder.toString() + "<br>");
 
         model.addAttribute("fullName", currentUser.getFullName());
@@ -63,11 +77,13 @@ public class ChatController {
     public String refresh(Model model) {
 
         stringBuilder.delete(0, stringBuilder.capacity());
-        messages.forEach((line) -> stringBuilder.append(line.getFormattedMessage() + "<br>"));
+        messages.forEach((line) -> stringBuilder.append(line
+                .getFormattedMessage() + "<br>"));
         model.addAttribute("messages", stringBuilder.toString() + "<br>");
 
         stringBuilder.delete(0, stringBuilder.capacity());
-        users.forEach((line) -> stringBuilder.append(line.getFullName() + "<br>"));
+        users.forEach((line) -> stringBuilder.append(line.getFullName()
+                + "<br>"));
         model.addAttribute("users", stringBuilder.toString() + "<br>");
         model.addAttribute("fullName", currentUser.getFullName());
 

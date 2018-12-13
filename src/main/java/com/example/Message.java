@@ -69,6 +69,7 @@ public class Message {
     }
 
     public String getFormattedMessage() {
-        return dateTime.atZone(ZoneId.of("Europe/Samara")).format(formatter) + " | " + user.getFullName()+ ": " + message;
+        return dateTime.atZone(ZoneId.of("Europe/Samara")).format(formatter) +
+                " | " + user.getFullName()+ ": " + message;
     }
 }
