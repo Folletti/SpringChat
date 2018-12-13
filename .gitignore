@@ -1,5 +1,5 @@
 .idea
 target
 *.iml
-*.avi
+
 src/test/
