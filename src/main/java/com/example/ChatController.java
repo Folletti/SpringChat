@@ -14,8 +14,6 @@ import java.util.ArrayList;
 public class ChatController {
     private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Message> messages = new ArrayList<>();
-    private static DateTimeFormatter formatter = DateTimeFormatter
-            .ofPattern("dd.MM.yyyy HH:mm:ss");
     private String user;
     private User currentUser;
     private StringBuilder stringBuilder = new StringBuilder();

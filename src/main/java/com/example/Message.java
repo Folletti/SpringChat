@@ -1,9 +1,16 @@
 package com.example;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+
+
 public class Message {
+    private static DateTimeFormatter formatter = DateTimeFormatter
+            .ofPattern("dd.MM.yyyy HH:mm:ss");
+
     public Message(User user, String message, Instant dateTime) {
         this.dateTime = dateTime;
         this.message = message;
@@ -62,6 +69,6 @@ public class Message {
     }
 
     public String getFormattedMessage() {
-        return dateTime.toString() + " | " + user.getFullName()+ ": " + message;
+        return dateTime.atZone(ZoneId.of("Europe/Samara")).format(formatter) + " | " + user.getFullName()+ ": " + message;
     }
 }
