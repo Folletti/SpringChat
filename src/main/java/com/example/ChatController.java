@@ -37,7 +37,7 @@ public class ChatController {
                                      String message, Model model) {
         if (!name.equals("user")) {
             currentUser.setFullName(name);
-            users.forEach( (line) -> {
+            users.forEach(line -> {
                 if (line.equals(currentUser)) {
                     line.setFullName(currentUser.getFullName());
                 }
@@ -47,12 +47,14 @@ public class ChatController {
         messages.add(new Message(currentUser,  message, Instant.now()));
         stringBuilder.delete(0, stringBuilder.capacity());
 
-        messages.forEach((line) -> stringBuilder.append(line.getFormattedMessage() + "<br>"));
-        model.addAttribute("messages", stringBuilder.toString() + "<br>");
+        messages.forEach(line -> stringBuilder.append(line.getFormattedMessage())
+            .append("<br>"));
+        model.addAttribute("messages", stringBuilder.append("<br>"));
         stringBuilder.delete(0, stringBuilder.capacity());
 
-        users.forEach((line) -> stringBuilder.append(line.getFullName() + "<br>"));
-        model.addAttribute("users", stringBuilder.toString() + "<br>");
+        users.forEach(line -> stringBuilder.append(line.getFullName())
+            .append("<br>"));
+        model.addAttribute("users", stringBuilder.append("<br>"));
 
         model.addAttribute("fullName", currentUser.getFullName());
 
@@ -63,12 +65,13 @@ public class ChatController {
     public String refresh(Model model) {
 
         stringBuilder.delete(0, stringBuilder.capacity());
-        messages.forEach((line) -> stringBuilder.append(line.getFormattedMessage() + "<br>"));
-        model.addAttribute("messages", stringBuilder.toString() + "<br>");
+        messages.forEach(line -> stringBuilder.append(line.getFormattedMessage())
+            .append("<br>"));
+        model.addAttribute("messages", stringBuilder.append("<br>"));
 
         stringBuilder.delete(0, stringBuilder.capacity());
-        users.forEach((line) -> stringBuilder.append(line.getFullName() + "<br>"));
-        model.addAttribute("users", stringBuilder.toString() + "<br>");
+        users.forEach(line -> stringBuilder.append(line.getFullName()).append("<br>"));
+        model.addAttribute("users", stringBuilder.append("<br>"));
         model.addAttribute("fullName", currentUser.getFullName());
 
         return "chat";
