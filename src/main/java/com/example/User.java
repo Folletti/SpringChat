@@ -1,13 +1,18 @@
 package com.example;
 
+import org.springframework.boot.web.servlet.server.Session;
+
+import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 public class User {
-    public User(String fullName) {
+    public User(String fullName, HttpSession session) {
         this.fullName = fullName;
+        this.sessionId = session.getId();
     }
 
     private String fullName;
+    private String sessionId;
 
     public String getFullName() {
         return fullName;
@@ -16,7 +21,11 @@ public class User {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
-
+    
+    public String getSessionId() {
+        return sessionId;
+    }
+    
     @Override
     public String toString() {
         return "User{" +
