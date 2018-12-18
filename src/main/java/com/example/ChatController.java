@@ -2,13 +2,15 @@ package com.example;
 
 import org.springframework.boot.autoconfigure.session.SessionProperties;
 import org.springframework.boot.web.servlet.server.Session;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpRequest;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.HttpServletBean;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
 import java.time.Instant;
@@ -25,6 +27,7 @@ public class ChatController {
     private Session currentSession;
     private StringBuilder stringBuilder = new StringBuilder();
 
+    /*
     @RequestMapping("/")
     public String greeting(@RequestParam(name = "fullName", required = false,
             defaultValue = "user") String name, Model model, HttpSession httpSession) {
@@ -93,5 +96,16 @@ public class ChatController {
 
         return "chat";
     }
+    */
+    
+    @MessageMapping("/hello")
+    @SendTo("/springchat/greetings")
+    public Greeting greeting(Message message) throws Exception {
+    
+        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getUser().getFullName()) + "!");
+    }
+    
+    
+    
 
 }
