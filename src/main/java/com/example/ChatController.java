@@ -100,9 +100,9 @@ public class ChatController {
     
     @MessageMapping("/hello")
     @SendTo("/springchat/greetings")
-    public Greeting greeting(Message message) throws Exception {
+    public Greeting greeting(HelloMessage message) throws Exception {
     
-        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getUser().getFullName()) + "!");
+        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName() + "!"));
     }
     
     
