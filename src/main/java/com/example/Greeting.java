@@ -4,7 +4,7 @@ public class Greeting {
     public Greeting(String content) {
         this.content = content;
     }
-    String content;
+    private String content;
     
     public String getContent() {
         return content;

@@ -1,6 +1,9 @@
 package com.example;
 
 public class HelloMessage {
+    public HelloMessage() {
+    }
+    
     public HelloMessage(String name) {
         this.name = name;
     }
