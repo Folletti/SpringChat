@@ -6,9 +6,9 @@ import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 public class User {
-    public User(String fullName, HttpSession session) {
+    public User(String fullName, String session) {
         this.fullName = fullName;
-        this.sessionId = session.getId();
+        this.sessionId = session;
     }
 
     private String fullName;

@@ -1,31 +1,21 @@
 package com.example;
 
-import org.springframework.boot.autoconfigure.session.SessionProperties;
-import org.springframework.boot.web.servlet.server.Session;
-import org.springframework.http.HttpRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.HttpServletBean;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.servlet.http.HttpSession;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class ChatController {
-    private List<User> users = new ArrayList<>();
-    private List<Message> messages = new ArrayList<>();
+    private static List<User> users = new ArrayList<>();
+  //  private static List<Message> messages = new ArrayList<>();
    // private String user;
-    private User currentUser;
-    private Session currentSession;
-    private StringBuilder stringBuilder = new StringBuilder();
+   // private User currentUser;
+   // private StringBuilder stringBuilder = new StringBuilder();
 
     /*
     @RequestMapping("/")
@@ -99,13 +89,26 @@ public class ChatController {
     */
     
     @MessageMapping("/hello")
-    @SendTo("/springchat/greetings")
-    public Greeting greeting(HelloMessage message) throws Exception {
-    
-        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName() + "!"));
+    @SendTo("/springchat/greeting")
+    public Greeting greeting(UserNameMessage message, String session) throws Exception {
+        User currentUser = new User(HtmlUtils.htmlEscape(message.getName()), session);
+        users.add(currentUser);
+        return new Greeting("Hello, " + currentUser.getFullName() + "!" );
     }
     
+    @MessageMapping("/chat")
+    @SendTo("/springchat/room")
+    public Message messenger(TextMessage message, String session) throws Exception {
+        User currentUser = null;
+        for(User user : users) {
+            if (user.getSessionId().equals(session)) {
+                currentUser = user;
+            }
+            else {
+                currentUser = new User("UndefinedUser", "00000");
+            }
+        }
+        return new Message(currentUser, HtmlUtils.htmlEscape(message.getContent()), Instant.now());
+    }
     
-    
-
 }

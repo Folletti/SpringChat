@@ -19,20 +19,26 @@
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="connect">Websocket connection:</label>
-                    <button id="connect" class="btn btn-default"
-                            type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default"
-                            type="submit" disabled="disabled">Disconnect</button>
+                    <label for="name">Enter your
+                        name and push "Enter" </label>
+                    <input id="name" type="text" class="form-control"
+                           placeholder="Your name here">
+                    <label for="enter">Chat connection </label>
+                    <button id="enter" class="btn btn-default"
+                            type="submit">Enter</button>
+                    <button id="quit" class="btn btn-default"
+                            type="submit" disabled="disabled">Quit</button>
                 </div>
             </form>
         </div>
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control"
-                           placeholder="Your name here">
+                    <label for="message">Enter your message: </label>
+                    <input type="text" id="message" class="form-control"
+                           placeholder="Your message here">
                 </div>
                 <button id="send" class="btn btn-default"
                         type="submit">Send</button>
@@ -44,10 +50,10 @@
             <table id="conversation" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Greetings</th>
+                        <th>Chat</th>
                     </tr>
                 </thead>
-                <tbody id="greetings">
+                <tbody id="chat">
                 </tbody>
             </table>
         </div>

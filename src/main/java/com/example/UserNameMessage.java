@@ -1,10 +1,10 @@
 package com.example;
 
-public class HelloMessage {
-    public HelloMessage() {
+public class UserNameMessage {
+    public UserNameMessage() {
     }
     
-    public HelloMessage(String name) {
+    public UserNameMessage(String name) {
         this.name = name;
     }
     private String name;

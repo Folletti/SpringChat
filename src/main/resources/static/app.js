@@ -1,29 +1,37 @@
 var stompClient = null;
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
+    $("#enter").prop("disabled", connected);
+    $("#quit").prop("disabled", !connected);
+    $("#name").prop("disabled", connected);
     if(connected) {
         $("#conversation").show();
     }
     else {
         $("#conversation").hide();
     }
-    $("#greetings").html("");
+    $("#chat").html("");
 }
 
-function connect() {
+function enter() {
     var socket = new SockJS("/gs-guide-websocket");
+    var sessionId;
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         setConnected(true);
         console.log("Connected: " + frame);
-        stompClient.subscribe("/springchat/greetings", function(greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
+        sessionId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
+        stompClient.subscribe("/springchat/greeting", function(greeting) {
+            showMessage(JSON.parse(greeting.body).content);
         });
-    })
+        stompClient.subscribe("/springchat/room", function(message) {
+            showMessage(JSON.parse(message.body).user,
+            JSON.parse(message.body).message);
+        })
+    }
+    sendName();
 }
 
-function disconnect() {
+function quit() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
@@ -33,11 +41,23 @@ function disconnect() {
 }
 
 function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify( {"name" : $("#name").val()} ));
+    stompClient.send("/app/hello", {}, JSON.stringify(
+        { "name" : $("#name").val(); }
+    ));
 }
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+
+function sendMessage() {
+    stompClient.send("/app/chat", {}, JSON.stringify(
+        {
+            "message" : $("#message").val();
+            "sessionId": sessionId;
+        }
+    ));
+}
+
+function showMessage(user, message) {
+    $("#chat").append("<tr><td>" + user + ": " + message + "</td></tr>");
 }
 
 $(function() {
@@ -45,13 +65,13 @@ $(function() {
     $("form").on("submit", function(e) {
         e.preventDefault();
     });
-    $("#connect").click(function() {
-        connect();
+    $("#enter").click(function() {
+        enter();
     });
-    $("#disconnect").click(function() {
-        disconnect();
+    $("#quit").click(function() {
+        quit();
     });
     $("#send").click(function() {
-        sendName();
+        sendMessage();
     });
 });

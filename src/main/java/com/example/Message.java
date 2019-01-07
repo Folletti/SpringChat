@@ -8,6 +8,8 @@ import java.util.Objects;
 
 
 public class Message {
+    public Message() {}
+    
     private static DateTimeFormatter formatter = DateTimeFormatter
             .ofPattern("dd.MM.yyyy HH:mm:ss");
 
