@@ -16,7 +16,7 @@ public class ChatController {
   //  private static List<Message> messages = new ArrayList<>();
    // private String user;
    // private User currentUser;
-   // private StringBuilder stringBuilder = new StringBuilder();
+    private StringBuilder stringBuilder = new StringBuilder();
 
     /*
     @RequestMapping("/")
@@ -92,11 +92,25 @@ public class ChatController {
     @MessageMapping("/hello")
     @SendTo("/springchat/room")
     public Greeting greeting(UserNameMessage message) throws Exception {
-        //String sessionId = message.getSessionId();
-        User currentUser = new User(HtmlUtils.htmlEscape(message.getName()), HtmlUtils.htmlEscape(HtmlUtils.htmlEscape(message.getSessionId())));
-        users.add(currentUser);
-        
-        return new Greeting("Hello, " + currentUser.getFullName() + "!" );
+        String sessionId = HtmlUtils.htmlEscape(message.getSessionId());
+        String greeting;
+        User currentUser = new User(HtmlUtils.htmlEscape(message.getName()),
+            sessionId);
+        if (!users.contains(currentUser)) {
+            users.add(currentUser);
+            greeting = "Welcome to the chatroom, ";
+        } else {
+            for (User user : users) {
+                if (user.equals(currentUser)) {
+                    user.setSessionId(currentUser.getSessionId());
+                }
+            }
+            greeting = "Glad to see you again, ";
+        }
+        stringBuilder.delete(0, stringBuilder.capacity());
+        stringBuilder.append(greeting).append(currentUser.getFullName()).append("!");
+        messages.forEach( mes -> stringBuilder.append("<br>").append(mes.getFormattedMessage()));
+        return new Greeting(stringBuilder.toString());
     }
     
     @MessageMapping("/chat")
@@ -113,7 +127,8 @@ public class ChatController {
                 currentUser = new User("UndefinedUser", "00000");
             }
         }
-        Message msg = new Message(currentUser, HtmlUtils.htmlEscape(message.getText()), Instant.now());
+        Message msg = new Message(currentUser, HtmlUtils.htmlEscape(message
+            .getText()), Instant.now());
         messages.add(msg);
         return new OutputMessage(msg.getFormattedMessage());
     }

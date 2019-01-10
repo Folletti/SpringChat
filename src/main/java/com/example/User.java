@@ -23,6 +23,10 @@ public class User {
         return sessionId;
     }
     
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+    
     @Override
     public String toString() {
         return "User{" +

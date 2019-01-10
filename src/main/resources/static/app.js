@@ -71,5 +71,5 @@ $(function() {
     $("#send").click(function() {
         sendMessage();
     });
-    
+
 });
