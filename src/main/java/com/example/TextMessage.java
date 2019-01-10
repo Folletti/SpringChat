@@ -2,17 +2,28 @@ package com.example;
 
 public class TextMessage {
     
-    public TextMessage(String content) {
-        this.content = content;
-    }
-    private String content;
+    public TextMessage() {}
     
-    public String getContent() {
-        return content;
+    public TextMessage(String text, String sessionId) {
+        this.text = text;
+        this.sessionId = sessionId;
+    }
+    private String text;
+    private String sessionId;
+    
+    public String getText() {
+        return text;
     }
     
-    public void setContent(String content) {
-        this.content = content;
+    public void setText(String text) {
+        this.text = text;
     }
     
+    public String getSessionId() {
+        return sessionId;
+    }
+    
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 }

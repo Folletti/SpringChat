@@ -2,7 +2,7 @@ var stompClient = null;
 function setConnected(connected) {
     $("#enter").prop("disabled", connected);
     $("#quit").prop("disabled", !connected);
-    $("#name").prop("disabled", connected);
+    $("#send").prop("disabled", !connected);
     if(connected) {
         $("#conversation").show();
     }
@@ -12,56 +12,53 @@ function setConnected(connected) {
     $("#chat").html("");
 }
 
+var sessionId = "";
 function enter() {
     var socket = new SockJS("/gs-guide-websocket");
-    var sessionId;
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
         setConnected(true);
         console.log("Connected: " + frame);
-        sessionId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
-        stompClient.subscribe("/springchat/greeting", function(greeting) {
-            showMessage(JSON.parse(greeting.body).content);
-        });
         stompClient.subscribe("/springchat/room", function(message) {
-            showMessage(JSON.parse(message.body).user,
-            JSON.parse(message.body).message);
-        })
-    }
-    sendName();
+            showMessage(JSON.parse(message.body).content);
+        });
+        sessionId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
+        stompClient.send("/app/hello", {}, JSON.stringify(
+                {
+                    "name" : $("#name").val(),
+                    "sessionId" : sessionId
+                }
+         ));
+
+    });
+
 }
 
 function quit() {
+
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-     setConnected(false);
-     console.log("Disconnected");
+    setConnected(false);
+    $("#chat").html("Disconnected");
+    console.log("Disconnected");
 
 }
-
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify(
-        { "name" : $("#name").val(); }
-    ));
-}
-
 
 function sendMessage() {
     stompClient.send("/app/chat", {}, JSON.stringify(
         {
-            "message" : $("#message").val();
-            "sessionId": sessionId;
+            "text" : $("#text").val(),
+            "sessionId" : sessionId
         }
     ));
 }
 
-function showMessage(user, message) {
-    $("#chat").append("<tr><td>" + user + ": " + message + "</td></tr>");
+function showMessage(message) {
+    $("#chat").append("<tr><td>" + message + "</td></tr>");
 }
 
 $(function() {
-    //$("#send").prop("disabled", true);
     $("form").on("submit", function(e) {
         e.preventDefault();
     });
@@ -74,4 +71,5 @@ $(function() {
     $("#send").click(function() {
         sendMessage();
     });
+    
 });

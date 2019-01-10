@@ -12,6 +12,7 @@ import java.util.List;
 @Controller
 public class ChatController {
     private static List<User> users = new ArrayList<>();
+    private static List<Message> messages = new ArrayList<>();
   //  private static List<Message> messages = new ArrayList<>();
    // private String user;
    // private User currentUser;
@@ -89,26 +90,32 @@ public class ChatController {
     */
     
     @MessageMapping("/hello")
-    @SendTo("/springchat/greeting")
-    public Greeting greeting(UserNameMessage message, String session) throws Exception {
-        User currentUser = new User(HtmlUtils.htmlEscape(message.getName()), session);
+    @SendTo("/springchat/room")
+    public Greeting greeting(UserNameMessage message) throws Exception {
+        //String sessionId = message.getSessionId();
+        User currentUser = new User(HtmlUtils.htmlEscape(message.getName()), HtmlUtils.htmlEscape(HtmlUtils.htmlEscape(message.getSessionId())));
         users.add(currentUser);
+        
         return new Greeting("Hello, " + currentUser.getFullName() + "!" );
     }
     
     @MessageMapping("/chat")
     @SendTo("/springchat/room")
-    public Message messenger(TextMessage message, String session) throws Exception {
+    public OutputMessage messenger(TextMessage message) throws Exception {
         User currentUser = null;
+        Message currentMsg = null;
+        String sessionId = HtmlUtils.htmlEscape(message.getSessionId());
         for(User user : users) {
-            if (user.getSessionId().equals(session)) {
+            if (user.getSessionId().equals(sessionId)) {
                 currentUser = user;
             }
             else {
                 currentUser = new User("UndefinedUser", "00000");
             }
         }
-        return new Message(currentUser, HtmlUtils.htmlEscape(message.getContent()), Instant.now());
+        Message msg = new Message(currentUser, HtmlUtils.htmlEscape(message.getText()), Instant.now());
+        messages.add(msg);
+        return new OutputMessage(msg.getFormattedMessage());
     }
     
 }

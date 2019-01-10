@@ -1,8 +1,5 @@
 package com.example;
 
-import org.springframework.boot.web.servlet.server.Session;
-
-import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 public class User {
