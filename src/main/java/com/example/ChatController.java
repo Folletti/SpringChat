@@ -93,28 +93,8 @@ public class ChatController {
     @SendTo("/springchat/room")
     public Greeting greeting(UserNameMessage message) throws Exception {
         String sessionId = HtmlUtils.htmlEscape(message.getSessionId());
-        String greeting = "(no greeting)";
-        stringBuilder.delete(0, stringBuilder.capacity());
-        String forUser = "all";
         User currentUser = new User(HtmlUtils.htmlEscape(message.getName()),
             sessionId);
-        if (!users.contains(currentUser)) {
-            users.add(currentUser);
-            
-        } else {
-            for (User user : users) {
-                if (user.equals(currentUser)) {
-                    user.setSessionId(currentUser.getSessionId());
-                    stringBuilder.append("Glad to see you again, ").append(user
-                        .getFullName()).append("!<br>").append("Here is the history: ");
-                    messages.forEach( mes -> stringBuilder.append("<br>").append(mes
-                        .getFormattedMessage()));
-                    forUser = sessionId;
-                    sendHistory(stringBuilder, forUser);
-                }
-            }
-        }
-        
         return new Greeting(currentUser.getFullName() + " entered the chatroom", "all");
         
     }
@@ -155,9 +135,32 @@ public class ChatController {
         return new Greeting(stringBuilder.toString(), forUser);
     }
     
+    @MessageMapping("/history")
     @SendTo("/springchat/room")
-    public Greeting sendHistory (StringBuilder stringBuilder, String forUser) throws Exception {
-        return new Greeting(stringBuilder.toString(), forUser);
+    public Greeting historyReq(UserNameMessage message) throws Exception {
+        String sessionId = HtmlUtils.htmlEscape(message.getSessionId());
+        stringBuilder.delete(0, stringBuilder.capacity());
+        User currentUser = new User(HtmlUtils.htmlEscape(message.getName()),
+            sessionId);
+        if (!users.contains(currentUser)) {
+            users.add(currentUser);
+        } else {
+            for (User user : users) {
+                if (user.equals(currentUser)) {
+                    user.setSessionId(currentUser.getSessionId());
+                    stringBuilder.append("Glad to see you again, ").append(user
+                        .getFullName()).append("!");
+                    if (messages.size() != 0) {
+                        stringBuilder.append("<br>").append("Here is the history: ");
+                        messages.forEach( mes -> stringBuilder.append("<br>")
+                            .append(mes.getFormattedMessage()));
+                    }
+                }
+            }
+        }
+        
+        return new Greeting(stringBuilder.toString(), sessionId);
+        
     }
     
 }

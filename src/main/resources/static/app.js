@@ -24,11 +24,20 @@ function enter() {
         console.log("Connected: " + frame);
         stompClient.subscribe("/springchat/room", function(message) {
             forUser = JSON.parse(message.body).forUser;
-            if (forUser === sessionId || forUser === "all") {
-                showMessage(JSON.parse(message.body).content);
-            }
+                 if (forUser === sessionId || forUser === "all") {
+                      if (JSON.parse(message.body).content !== "") {
+                            showMessage(JSON.parse(message.body).content);
+                      }
+                 }
+
         });
         stompClient.send("/app/hello", {}, JSON.stringify(
+                {
+                    "name" : $("#name").val(),
+                    "sessionId" : sessionId
+                }
+        ));
+        stompClient.send("/app/history", {}, JSON.stringify(
                 {
                     "name" : $("#name").val(),
                     "sessionId" : sessionId
