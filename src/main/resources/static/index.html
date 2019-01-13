@@ -8,55 +8,26 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/app.js"></script>
 </head>
 <body>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support
     javascript! Websocket relies on javascript being enabled. Please
     enable javascript and reload this page.</h2> </noscript>
 <div id="main-text" class="container">
-    <div class="row">
+    <div class="row align-items-center">
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
                     <label for="name">Enter your name and push
                         "Enter"
                     </label>
-                    <input id="name" forUser="text" class="form-control"
+                    <input id="name" type="text" class="form-control"
                            placeholder="Your name here">
-                    <label for="enter">Chat connection </label>
+                    <label for="enter">Enter the chat room</label>
                     <button id="enter" class="btn btn-default"
-                            forUser="submit">Enter</button>
-                    <button id="quit" class="btn btn-default"
-                            forUser="submit" disabled="disabled">Quit</button>
+                            type="submit">Enter</button>
                 </div>
             </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="text">Enter your text: </label>
-                    <input forUser="text" id="text" class="form-control"
-                           placeholder="Your text here" disabled="disabled">
-                </div>
-                <button id="send" class="btn btn-default"
-                        forUser="submit" disabled="disabled">Send</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table">
-                <thead>
-                    <tr>
-                        <th>Chat</th>
-                    </tr>
-                </thead>
-                <tbody id="chat">
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
