@@ -2,11 +2,13 @@ package com.example;
 
 public class OutputMessage {
     public OutputMessage() {}
-    public OutputMessage(String content) {
+    public OutputMessage(String content, String forUser) {
         this.content = content;
+        this.forUser = forUser;
     }
     
     private String content;
+    private String forUser;
     
     public String getContent() {
         return content;
@@ -14,5 +16,13 @@ public class OutputMessage {
     
     public void setContent(String content) {
         this.content = content;
+    }
+    
+    public String getForUser() {
+        return forUser;
+    }
+    
+    public void setForUser(String forUser) {
+        this.forUser = forUser;
     }
 }

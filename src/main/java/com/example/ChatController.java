@@ -93,24 +93,30 @@ public class ChatController {
     @SendTo("/springchat/room")
     public Greeting greeting(UserNameMessage message) throws Exception {
         String sessionId = HtmlUtils.htmlEscape(message.getSessionId());
-        String greeting;
+        String greeting = "(no greeting)";
+        stringBuilder.delete(0, stringBuilder.capacity());
+        String forUser = "all";
         User currentUser = new User(HtmlUtils.htmlEscape(message.getName()),
             sessionId);
         if (!users.contains(currentUser)) {
             users.add(currentUser);
-            greeting = "Welcome to the chatroom, ";
+            
         } else {
             for (User user : users) {
                 if (user.equals(currentUser)) {
                     user.setSessionId(currentUser.getSessionId());
+                    stringBuilder.append("Glad to see you again, ").append(user
+                        .getFullName()).append("!<br>").append("Here is the history: ");
+                    messages.forEach( mes -> stringBuilder.append("<br>").append(mes
+                        .getFormattedMessage()));
+                    forUser = sessionId;
+                    sendHistory(stringBuilder, forUser);
                 }
             }
-            greeting = "Glad to see you again, ";
         }
-        stringBuilder.delete(0, stringBuilder.capacity());
-        stringBuilder.append(greeting).append(currentUser.getFullName()).append("!");
-        messages.forEach( mes -> stringBuilder.append("<br>").append(mes.getFormattedMessage()));
-        return new Greeting(stringBuilder.toString());
+        
+        return new Greeting(currentUser.getFullName() + " entered the chatroom", "all");
+        
     }
     
     @MessageMapping("/chat")
@@ -119,18 +125,39 @@ public class ChatController {
         User currentUser = null;
         Message currentMsg = null;
         String sessionId = HtmlUtils.htmlEscape(message.getSessionId());
+        String forUser = "all";
         for(User user : users) {
             if (user.getSessionId().equals(sessionId)) {
                 currentUser = user;
             }
-            else {
-                currentUser = new User("UndefinedUser", "00000");
-            }
+        }
+        if (currentUser == null) {
+            currentUser = new User("UndefinedUser", "00000");
         }
         Message msg = new Message(currentUser, HtmlUtils.htmlEscape(message
             .getText()), Instant.now());
         messages.add(msg);
-        return new OutputMessage(msg.getFormattedMessage());
+        return new OutputMessage(msg.getFormattedMessage(), forUser);
+    }
+    
+    @MessageMapping("/goodbye")
+    @SendTo("/springchat/room")
+    public Greeting goodbye(UserNameMessage message) throws Exception {
+        String sessionId = HtmlUtils.htmlEscape(message.getSessionId());
+        stringBuilder.delete(0, stringBuilder.capacity());
+        String forUser = "all";
+        for (User user : users) {
+            if (user.getSessionId().equals(sessionId)) {
+                stringBuilder.append(user.getFullName()).append(" left the chatroom");
+            }
+        }
+        
+        return new Greeting(stringBuilder.toString(), forUser);
+    }
+    
+    @SendTo("/springchat/room")
+    public Greeting sendHistory (StringBuilder stringBuilder, String forUser) throws Exception {
+        return new Greeting(stringBuilder.toString(), forUser);
     }
     
 }

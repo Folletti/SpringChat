@@ -75,7 +75,7 @@
     </dependencies>
 
     <properties>
-        <java.version>1.8.0_192</java.version>
+        <java.version>1.8</java.version>
     </properties>
 
 

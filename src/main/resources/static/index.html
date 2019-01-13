@@ -22,13 +22,13 @@
                     <label for="name">Enter your name and push
                         "Enter"
                     </label>
-                    <input id="name" type="text" class="form-control"
+                    <input id="name" forUser="text" class="form-control"
                            placeholder="Your name here">
                     <label for="enter">Chat connection </label>
                     <button id="enter" class="btn btn-default"
-                            type="submit">Enter</button>
+                            forUser="submit">Enter</button>
                     <button id="quit" class="btn btn-default"
-                            type="submit" disabled="disabled">Quit</button>
+                            forUser="submit" disabled="disabled">Quit</button>
                 </div>
             </form>
         </div>
@@ -38,17 +38,17 @@
             <form class="form-inline">
                 <div class="form-group">
                     <label for="text">Enter your text: </label>
-                    <input type="text" id="text" class="form-control"
-                           placeholder="Your text here">
+                    <input forUser="text" id="text" class="form-control"
+                           placeholder="Your text here" disabled="disabled">
                 </div>
                 <button id="send" class="btn btn-default"
-                        type="submit" disabled="disabled">Send</button>
+                        forUser="submit" disabled="disabled">Send</button>
             </form>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
+            <table id="conversation" class="table">
                 <thead>
                     <tr>
                         <th>Chat</th>

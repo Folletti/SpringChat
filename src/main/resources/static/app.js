@@ -1,8 +1,11 @@
 var stompClient = null;
+
 function setConnected(connected) {
     $("#enter").prop("disabled", connected);
     $("#quit").prop("disabled", !connected);
     $("#send").prop("disabled", !connected);
+    $("#text").prop("disabled", !connected);
+    $("#name").prop("disabled", connected);
     if(connected) {
         $("#conversation").show();
     }
@@ -17,25 +20,39 @@ function enter() {
     var socket = new SockJS("/gs-guide-websocket");
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
-        setConnected(true);
+        sessionId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
         console.log("Connected: " + frame);
         stompClient.subscribe("/springchat/room", function(message) {
-            showMessage(JSON.parse(message.body).content);
+            forUser = JSON.parse(message.body).forUser;
+            if (forUser === sessionId || forUser === "all") {
+                showMessage(JSON.parse(message.body).content);
+            }
         });
-        sessionId = /\/([^\/]+)\/websocket/.exec(socket._transport.url)[1];
         stompClient.send("/app/hello", {}, JSON.stringify(
                 {
                     "name" : $("#name").val(),
                     "sessionId" : sessionId
                 }
-         ));
+        ));
+        setConnected(true);
+        $("#name").val("");
 
     });
 
 }
 
+function sendQuitMessage() {
+    stompClient.send("/app/goodbye", {}, JSON.stringify(
+                    {
+                        "name" : "",
+                        "sessionId" : sessionId
+                    }
+            ));
+}
+
 function quit() {
 
+    sendQuitMessage();
     if (stompClient !== null) {
         stompClient.disconnect();
     }
@@ -52,6 +69,8 @@ function sendMessage() {
             "sessionId" : sessionId
         }
     ));
+    $("#text").val("");
+
 }
 
 function showMessage(message) {
@@ -71,5 +90,6 @@ $(function() {
     $("#send").click(function() {
         sendMessage();
     });
+    $("#conversation").hide();
 
 });
